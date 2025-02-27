@@ -1,0 +1,134 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý Users</title>
+  <style>
+    .error-message {
+        color: red;
+        margin: 10px 0;
+        display: none;
+    }
+    .success-message {
+        color: green;
+        margin: 10px 0;
+        display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Danh sách Users</h1>
+  <ul id="user-list"></ul>
+
+  <h2>Thêm User mới</h2>
+  <form id="user-form">
+    <div id="error-message" class="error-message"></div>
+    <div id="success-message" class="success-message"></div>
+    <input type="text" name="name" placeholder="Tên" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <button type="submit">Thêm</button>
+  </form>
+
+  <script>
+    // Hàm load users từ API
+    function loadUsers() {
+      fetch('/api/users/')
+        .then(response => response.json())
+        .then(data => {
+          const userList = document.getElementById('user-list');
+          userList.innerHTML = '';
+          data.forEach(user => {
+            const li = document.createElement('li');
+            li.textContent = `${user.id}: ${user.username} - ${user.email}`;
+
+            // Tạo nút xóa user
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Xóa';
+            deleteButton.style.marginLeft = '10px';
+
+            // Sự kiện click nút xóa
+            deleteButton.addEventListener('click', () => {
+              // Gọi API DELETE với user id
+              fetch(`/api/users/${user.id}`, {
+                method: 'DELETE'
+              })
+              .then(response => {
+                if(response.status === 204){
+                  // Xóa thành công, load lại danh sách user
+                  loadUsers();
+                } else {
+                  console.error('Lỗi khi xóa user');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+            });
+
+            li.appendChild(deleteButton);
+            userList.appendChild(li);
+          });
+        })
+        .catch(error => console.error('Error fetching users:', error));
+    }
+
+    // Khi form submit, gọi API POST để thêm user
+    document.getElementById('user-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email')
+      };
+
+      fetch('/api/users/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+          if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Có lỗi xảy ra');
+                    });
+                }
+                return response.json();
+            })
+      .then(data => {
+          loadUsers();
+          this.reset();
+          showMessage('success', 'Thêm người dùng thành công!');
+          })
+          .catch(error => {
+              showMessage('error', error.message);
+              console.error('Error:', error);
+          });
+      });
+    // Thêm hàm hiển thị thông báo
+    function showMessage(type, message) {
+          const errorDiv = document.getElementById('error-message');
+          const successDiv = document.getElementById('success-message');
+          
+          if (type === 'error') {
+              errorDiv.textContent = message;
+              errorDiv.style.display = 'block';
+              successDiv.style.display = 'none';
+          } else {
+              successDiv.textContent = message;
+              successDiv.style.display = 'block';
+              errorDiv.style.display = 'none';
+          }
+
+          // Tự động ẩn thông báo sau 3 giây
+          setTimeout(() => {
+              errorDiv.style.display = 'none';
+              successDiv.style.display = 'none';
+          }, 3000);
+      }
+
+    // Load danh sách user khi trang được tải
+    window.onload = loadUsers;
+  </script>
+</body>
+</html>
