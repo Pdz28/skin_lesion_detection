@@ -22,7 +22,7 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
     return response.json();
   })
   .then(data => {
-    let countdown = 5;
+    let countdown = 3;
     const successMessage = document.getElementById('success-message');
     successMessage.textContent = `Login successful! Redirecting you to the main page in ${countdown} seconds.`;
     successMessage.style.display = 'block';
