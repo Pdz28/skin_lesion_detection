@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Index</title>
+  <title>Skin Lesion Detection</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <div class="header">
-    <button class="logout-button" onclick="logout()">Logout</button>
-    <div class="username">{{ username }}</div>
+    <div class="title">SKIN LESION DETECTION</div>
+    <div class="user-controls">
+      <button class="logout-button" onclick="logout()">Logout</button>
+      <div class="username">{{ username }}</div>
+    </div>
   </div>
   <div class="container">
     <div class="upload-box">
