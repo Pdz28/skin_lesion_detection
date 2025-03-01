@@ -26,8 +26,12 @@ function processImage() {
     })
     .then(response => response.json())
     .then(data => {
-      // Redirect to results page with the image filenames
-      window.location.href = `/results?original_image=${data.original_image}&result_image=${data.result_image}`;
+      if (data.original_image && data.result_image) {
+        // Redirect to results page with the image filenames
+        window.location.href = `/results?original_image=${data.original_image}&result_image=${data.result_image}`;
+      } else {
+        alert('Error processing image.');
+      }
     })
     .catch(error => {
       console.error('Error:', error);
