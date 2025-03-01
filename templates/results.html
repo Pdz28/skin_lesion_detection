@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Results</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='result_styles.css') }}">
-</head>
-<body>
-  <div class="header">
-    <button class="logout-button" onclick="logout()">Logout</button>
-    <div class="username">{{ username }}</div>
-  </div>
-  <div class="container">
-    <div class="result-box">
-      <div class="image-preview">
-        <h3>The image you chose</h3>
-        <img src="{{ url_for('static', filename='uploads/' + original_image) }}" alt="Original Image">
-      </div>
-      <div class="image-result">
-        <h3>Model detected</h3>
-        <img src="{{ url_for('static', filename='results/' + result_image) }}" alt="Result Image">
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='result_styles.css') }}">
+  </head>
+  <body>
+    <div class="header">
+      <button class="logout-button" onclick="logout()">Logout</button>
+      <div class="username">{{ username }}</div>
+    </div>
+    <div class="container">
+      <div class="result-box">
+        <div class="image-preview">
+          <h3>Original Image</h3>
+          <img src="{{ url_for('static', filename='uploads/' + original_image) }}" alt="Original Image">
+        </div>
+        <div class="image-result">
+          <h3>Model detected image</h3>
+          <img src="{{ url_for('static', filename='results/' + result_image) }}" alt="Result Image">
+        </div>
       </div>
     </div>
-  </div>
-  <script src="{{ url_for('static', filename='result_scripts.js') }}"></script>
-</body>
+    <div class="upload-container">
+      <input type="file" id="new-image-upload" accept="image/*" max-size="20000000">
+      <button onclick="processNewImage()">Process</button>
+    </div>
+    <script src="{{ url_for('static', filename='result_scripts.js') }}"></script>
+  </body>
 </html>
