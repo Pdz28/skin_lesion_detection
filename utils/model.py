@@ -4,17 +4,18 @@ import cv2
 import numpy as np
 
 def load_model():
-    model = YOLO("src/checkpoint/best.pt")  # Load trained YOLO model
+    model = YOLO("src/checkpoint/skin_v4_yolo10.pt")  # Load trained YOLO model
     return model
 
 def detect_skin_disease(model, image):
     # Predict without showing labels
     results = model.predict(
         source=image,
-        conf=0.5,
+        conf=0.18,
+        iou=0.8,
         show=False,
         show_labels=False,
-        show_conf=False
+        show_conf=False,
     )
     
     # Create PIL image from numpy array
