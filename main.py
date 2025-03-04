@@ -199,11 +199,17 @@ def process_image():
                                           'result_' + secure_filename(file.filename))
         result_image.save(result_image_path)
 
-        return jsonify({"original_image": secure_filename(file.filename), 
-                        "result_image": 'result_' + secure_filename(file.filename),
-                        "predictions": predictions,
-                        "status": status
-                        }), 200
+        # Debugging output
+        print(f"Original Image Path: {original_image_path}")
+        print(f"Result Image Path: {result_image_path}")
+        print(f"Status: {status}")
+
+        # Return JSON response with the image filenames and status
+        return jsonify({
+            "original_image": secure_filename(file.filename),
+            "result_image": 'result_' + secure_filename(file.filename),
+            "status": status
+        }), 200
 
     return jsonify({"message": "Invalid file type"}), 400
 
@@ -218,8 +224,13 @@ def results():
     status_json = request.args.get('status', '{}')
     try:
         status = json.loads(status_json)
-    except:
+    except json.JSONDecodeError:
         status = {"has_detection": False, "message": "No detection data available"}
+
+    # Debugging output
+    print(f"Original Image: {original_image}")
+    print(f"Result Image: {result_image}")
+    print(f"Status: {status}")
 
     if not original_image or not result_image:
         return redirect(url_for('home'))
