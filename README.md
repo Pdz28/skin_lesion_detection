@@ -1,1 +1,1 @@
-# skin_lesion_detection
+# skin_lesion_detection webpage
