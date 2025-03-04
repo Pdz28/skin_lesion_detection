@@ -7,12 +7,12 @@ body {
 
 .header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: #444;
   border-bottom: 1px solid #ccc;
-  color: #fff
+  color: #fff;
 }
 
 .header .username {
@@ -29,8 +29,18 @@ body {
   cursor: pointer;
 }
 
+.header .user-controls {
+  display: flex;
+  align-items: center;
+}
+
 .header .logout-button:hover {
   background-color: #c82333;
+}
+
+.header .title {
+  flex-grow: 1;
+  text-align: left;
 }
 
 .container {
@@ -58,9 +68,11 @@ body {
 }
 
 .image-preview img, .image-result img {
-  max-width: 100%;
-  border-radius: 8px;
-  margin-top: 10px;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .upload-container {
@@ -87,27 +99,24 @@ body {
   background-color: #218838;
 }
 
+.status-message-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 .status-message {
-  margin-top: 15px;
+  display: inline-block;
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 16px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
 }
 
 .status-message.normal {
-  background-color: #28a745;
-  color: white;
+  background-color: #d4edda;
+  color: #155724;
 }
 
 .status-message.warning {
-  background-color: #dc3545;
-  color: white;
-}
-
-.status-message i {
-  margin-right: 10px;
-  font-size: 18px;
+  background-color: #f8d7da;
+  color: #721c24;
 }
