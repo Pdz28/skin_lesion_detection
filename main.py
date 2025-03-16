@@ -214,12 +214,35 @@ def results():
 
     original_image = request.args.get('original_image')
     result_image = request.args.get('result_image')
-    # Parse status from URL parameters
-    status_json = request.args.get('status', '{}')
+    
+    # Parse status từ URL parameters
+    status_json = request.args.get('status')
+    
     try:
-        status = json.loads(status_json)
-    except:
-        status = {"has_detection": False, "message": "No detection data available"}
+        if status_json:
+            status = json.loads(status_json)
+            print("Status from URL:", status)
+        else:
+            print("Status is None, re-processing image...")
+            # Nếu không có status, xử lý lại ảnh để lấy status
+            if original_image and result_image:
+                # Tải ảnh gốc
+                original_image_path = os.path.join(app.config['UPLOAD_FOLDER'], original_image)
+                if os.path.exists(original_image_path):
+                    image = Image.open(original_image_path)
+                    processed_image = preprocess_image(image)
+                    model = load_model()
+                    
+                    # Chỉ lấy status từ model mà không lưu ảnh mới
+                    _, _, status = detect_skin_disease(model, processed_image)
+                    print("Status re-generated:", status)
+                else:
+                    status = {"has_detection": False, "message": "Không tìm thấy ảnh gốc"}
+            else:
+                status = {"has_detection": False, "message": "Không có dữ liệu phát hiện"}
+    except Exception as e:
+        print(f"Error processing status: {e}")
+        status = {"has_detection": False, "message": "Lỗi xử lý dữ liệu phát hiện"}
 
     if not original_image or not result_image:
         return redirect(url_for('home'))
