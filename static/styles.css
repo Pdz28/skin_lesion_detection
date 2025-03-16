@@ -7,11 +7,12 @@ body {
 
 .header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #303030;
+  background-color: #444;
   border-bottom: 1px solid #ccc;
+  color: #fff;
 }
 
 .header .username {
@@ -30,6 +31,11 @@ body {
 
 .header .logout-button:hover {
   background-color: #c82333;
+}
+
+.header .user-controls {
+  display: flex;
+  align-items: center;
 }
 
 .container {
