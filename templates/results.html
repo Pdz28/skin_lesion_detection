@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skin Lesion Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='result_styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <div class="title">SKIN LESION DETECTION</div>
+    <div class="user-controls">
+      <button class="logout-button" onclick="logout()">Logout</button>
+      <div class="username">{{ username }}</div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="result-box">
+      <div class="image-preview">
+        <h3>Original Image</h3>
+        <img src="{{ url_for('static', filename='uploads/' + original_image) }}" alt="Original Image">
+      </div>
+      <div class="image-result">
+        <h3>Detection Result</h3>
+        <img src="{{ url_for('static', filename='results/' + result_image) }}" alt="Result Image">
+        <div class="status-message {{ 'normal' if not status.has_detection else 'warning' }}">
+            <i class="{{ 'fas fa-check-circle' if not status.has_detection else 'fas fa-exclamation-triangle' }}"></i>
+            {{ status.message }}
+        </div>
+    </div>
+    </div>
+  </div>
+  <div class="upload-container">
+    <input type="file" id="new-image-upload" accept="image/*" max-size="20000000">
+    <button onclick="processNewImage()">Process</button>
+  </div>
+  <script src="{{ url_for('static', filename='result_scripts.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Kiểm tra xem có status trong sessionStorage không
+      const savedStatus = sessionStorage.getItem('imgStatus');
+      console.log("Retrieved from sessionStorage:", savedStatus);
+      
+      if (savedStatus) {
+        try {
+          const status = JSON.parse(savedStatus);
+          
+          // Cập nhật phần tử hiển thị status
+          const statusElement = document.querySelector('.status-message');
+          if (statusElement) {
+            // Thay đổi class dựa trên status
+            if (status.has_detection) {
+              statusElement.classList.remove('normal');
+              statusElement.classList.add('warning');
+              statusElement.querySelector('i').className = 'fas fa-exclamation-triangle';
+            } else {
+              statusElement.classList.remove('warning');
+              statusElement.classList.add('normal');
+              statusElement.querySelector('i').className = 'fas fa-check-circle';
+            }
+            
+            // Cập nhật nội dung
+            const textNode = statusElement.childNodes[1] || document.createTextNode('');
+            textNode.textContent = " " + status.message;
+            if (!statusElement.childNodes[1]) {
+              statusElement.appendChild(textNode);
+            }
+          }
+          
+          // Xóa status sau khi sử dụng
+          sessionStorage.removeItem('imgStatus');
+        } catch (e) {
+          console.error('Error processing saved status:', e);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
